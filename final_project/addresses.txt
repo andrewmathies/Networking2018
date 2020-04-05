@@ -1,0 +1,10 @@
+rendezvous host: 52.15.150.22
+rtr1: 128.163.232.71/25 eth0
+rtr2: 129.110.253.43/25 eth0
+
+tasks:
+- set up NAT's for two nodes behind respective routers
+- write UDP server for rendezvous host that will listen for the two clients and echo text
+- write UDP clients for two nodes that will dial server and echo text
+
+

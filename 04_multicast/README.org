@@ -1,0 +1,85 @@
+#+TITLE: Assignment 04: Service discovery with multicast
+#+SUBTITLE: Fall 2018
+#+OPTIONS: toc:nil num:nil html-postamble:nil author:nil date:nil
+#+LATEX_HEADER: \usepackage{times}
+#+LATEX_HEADER: \usepackage{listings}
+#+LATEX_HEADER: \lstset{basicstyle=\small\ttfamily,columns=flexible,breaklines=true}
+#+LATEX_HEADER: \usepackage[a4paper,margin=1.0in]{geometry}
+#+LATEX_HEADER: \setlength{\parindent}{0cm}
+#+LATEX_HEADER: \usepackage{parskip}
+#+LATEX_HEADER: \usepackage{enumitem}
+#+LATEX_HEADER: \setitemize{noitemsep,topsep=2pt,parsep=2pt,partopsep=2pt}
+#+LATEX_HEADER: \usepackage{titling}
+#+LATEX_HEADER: \setlength{\droptitle}{-1in}
+#+LATEX_HEADER: \posttitle{\par\end{center}\vspace{-.5in}}
+
+* Instructions
+
+Multicast allows a single sender to reach multiple receivers (clients) without
+addressing each receiver directly.  Instead, receivers join multicast "groups"
+and the network ensures that sender packets addressed to the group are
+replicated and reach all participating receivers.  At both the Network and Link
+layers, special addressing is used for multicast traffic. Specifically, for IPv4
+you may consult this IANA [[https://www.iana.org/assignments/multicast-addresses/multicast-addresses.xhtml][registry]].  The most common transport layer protocol to
+use multicast addressing is UDP.  Why is TCP not suitable?
+
+While multicast applications see mixed use in practice, there are certain cases
+where it has obvious benefits.  For instance, cluster imaging software may use
+multicast to push filesystem data to every node in a cluster.  Newer
+technologies such as [[https://en.wikipedia.org/wiki/Virtual_Extensible_LAN][VXLAN]] may use multicast to meet specific broadcast needs.
+Being nearly ubiquitous across a wide range of end systems, routers, and
+switches has allowed multicast to find new roles over time.
+
+The purpose of this assignmnet is to explore how to write a simple multicast
+application and understand how multicast can be used in practice.
+
+** Task 1: Multicast client and server
+
+Extend /netster/ to support a multicast server that acts as a "beacon" and sends
+out messages to any multicast client receivers that are reachable on a given
+multicast group address.  When a client receives the beacon, it should report
+back to the sender on some interval that it has received the beacon message and
+is "alive."  The server should then keep track of and display how many clients
+are currently active in the multicast group.
+
+ * The /netster/ skeleton code has been updated to include multicast command
+   line flags.  The server will now accept a =-m= parameter to specify the
+   multicast address to send to.  For the client, =-m= is similarly used to
+   signal multicast usage and the group address to join.  The client's =<host>=
+   parameter can be ignored.
+
+ * You will use the /netdev/ testbed from the previous assignment.  With 3
+   nodes, you can have a single sender and two receivers.  Another option is to
+   explore using GENI to increase the number of nodes in your testbed and scale
+   out your implementation.
+
+ * You will need to learn how to use /setsockopt/ calls to join multicast groups
+   and set fields such as the IP TTL header value.  The default TTL for
+   multicast packets is 1.  Why is this a good idea, and why do you need to
+   increase this value to make multicast work in the /netdev/ testbed?
+
+ * Clients may be terminated so the server should forget about clients after
+   some timeout period.
+
+** Task 2 (graduate section): Multicast file transfer
+
+Extend the application in Task 1 so that when N number of clients are active, a
+file transfer is initiated.  Of course, the server needs to somehow inform the
+clients that the beacon period is over and file data is next.  You may use and
+integrate the file transfer mechanism from the previous assignmnet.
+
+ * One approach is to simply use multicast UDP to try a best-effort delivery of
+   file data to the clients. Full reliability may not be a concern.  See [[https://tools.ietf.org/html/rfc2887][RFC2887]]
+   for some ideas on how to perform reliable multicast of bulk data.
+
+ * Explain some of the design decisions and tradeoffs of your approach in the
+   comment header of this submission's source code file.  Your solution may be
+   simple but you should clearly document its limitations and some possible
+   solutions.
+** TO SUBMIT
+ * Well-documented and formatted code in =a4= files for Task 1 committed and
+   pushed to your Net-Fall18 private repositories.  Follow the code submission
+   guidelines.
+
+ * If graduate section, additional Task 2 file transfer capability with source
+   code documentation of limitations and potential solutions.

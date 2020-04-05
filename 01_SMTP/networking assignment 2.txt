@@ -1,0 +1,42 @@
+Terminal Session:
+----------------------------------------------------------------------------------------------------------------
+
+-bash-4.2$ telnet mail-relay.iu.edu 25
+Trying 134.68.220.47...
+Connected to mail-relay.iu.edu.
+Escape character is '^]'.
+220 mail-relay.iu.edu ESMTP Sendmail 8.14.4/8.14.4/IU Campus Communications Team; Fri, 31 Aug 2018 13:41:51 -0400
+MAIL FROM:<awmathie@iu.edu>
+503 5.0.0 Polite people say HELO first
+
+500 5.5.1 Command unrecognized: ""
+HELO IU.EDU
+250 mail-relay.iu.edu Hello silo.soic.indiana.edu [129.79.247.5], pleased to meet you
+
+MAIL FROM:<awmathie@iu.edu>
+250 2.1.0 <awmathie@iu.edu>... Sender ok
+RCPT TO:<sice-networks-l@list.indiana.edu>
+250 2.1.5 <sice-networks-l@list.indiana.edu>... Recipient ok
+DATA
+354 Enter mail, end with "." on a line by itself
+subject:Andrew Mathies Assignment 01 SMTP
+
+Hellom
+This is a message for assignment 1.
+
+Best,
+Andrew Mathies
+.
+250 2.0.0 w7VHfpQT006931 Message accepted for delivery
+
+----------------------------------------------------------------------------------------------------------------
+Questions:
+----------------------------------------------------------------------------------------------------------------
+1. When I tried "RCPT TO:<andrewmathies@yahoo.com>," I got "550 5.7.1 <andrewmathies@yahoo.com>... Relaying denied. 
+Proper authentication required." as a response. So it didn't send. I think this is because yahoo only accepts SSL or
+TLS encrypted email and the IU SMTP server didn't encrypt the email. Either that or there is some kind of 
+authentication the yahoo server wanted that the IU server didn't provide.
+
+2. It works the same as if the address wasn't made up. This is allowed because the SMTP protocol itself doesn't have
+any verification. It seems like commercial SMTP servers have some server logic that prevents this, and the IU server
+does not have this logic.

@@ -1,0 +1,10 @@
+Andrew Mathies
+
+TCP is not suitable for multicast because it uses a direct connection between two hosts.
+Since UDP is connectionless and sends individual datagrams it works well for mutlicasting.
+
+The lower the TTL value is the better, since messages sent with a high TTL will travel
+around the network much further and cause congestion. We must set the TTL to be greater
+than one so it will make it from the client to the server in the testbed. A value of two
+is required for the message to get from the client to the server.
+
